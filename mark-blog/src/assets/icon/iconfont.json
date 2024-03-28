@@ -1,0 +1,37 @@
+{
+  "id": "4485642",
+  "name": "myBlog",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11633367",
+      "name": "gmail",
+      "font_class": "gmail",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "431779",
+      "name": "github",
+      "font_class": "github",
+      "unicode": "e709",
+      "unicode_decimal": 59145
+    },
+    {
+      "icon_id": "7239785",
+      "name": "instagram",
+      "font_class": "instagram",
+      "unicode": "e736",
+      "unicode_decimal": 59190
+    },
+    {
+      "icon_id": "37147901",
+      "name": "discord-copy",
+      "font_class": "discord",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    }
+  ]
+}
