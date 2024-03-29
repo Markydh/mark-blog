@@ -28,18 +28,32 @@
     <div class="my-project">
       <h1>💻我的项目</h1>
       <div class="project-content">
-        <div :class="projectDetail" @mouseenter="hoverEvent('projectDetail')" @mouseleave="hoverEvent('projectDetail')">
-            <div class="project-name" >
-              <i class="iconfont" style="font-size: 27px;color: #60bddc">&#xe799;</i>
-            </div>
+
+
+<!--        条件渲染子div
+            通过isActive的值来决定渲染哪种样式
+-->
+        <div :class="{ 'project-detail-Active': isActive === index, 'project-detail-nonActive': isActive !== index }" v-for="(item, index) in items" @mouseenter="divHoverEvent(index)" @mouseleave="divHoverEvent(null)"  @click="handleClick(this.item)" >
+          <div class="project-name">
+            <i class="iconfont" style="font-size: 27px;color: #3A8ABC">&#xe799;</i><span style="font-size: 18px;color:#3A8ABC;font-family: 'Hiragino Sans GB';padding-left: 5px">{{item.name}}</span>
+          </div>
           <div class="project-itd">
+            <p>{{item.tags}}</p>
           </div>
           <div class="project-tags">
+            <i class="iconfont" style="margin-top: -8px;padding-right: 0px;font-size: 30px;color:#3A8ABC">&#xe604;</i>
+            <p style="margin-top: 0px;padding-right: 22px">{{item.language}}</p>
+            <i class="iconfont" style="margin-top: -2px;padding-right: 3px;font-size: 18px;">&#xe8b9;</i>
+            <p style="margin-top: 0px;padding-right: 20px">3</p>
+            <i class="iconfont" style="margin-top: -2px;padding-right: 3px;font-size: 17px;color: rgba(0,0,0,0.68)">&#xe61f;</i>
+            <p style="margin-top: 0px;padding-right: 12px">6</p>
           </div>
+        </div>
+
+
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -52,7 +66,41 @@ export default {
       gmail:'gmail-nonActive',
       ins:'ins-nonActive',
       discord:'discord-nonActive',
-      projectDetail: 'project-detail-nonActive'
+      isActive: null,
+      items:[
+        {
+          name:"web-crawler",
+          tags:"First attempt at crawling",
+          language:'Python',
+          collect:2,
+          fork:3,
+          url:"https://github.com/Markydh/web-crawler"
+        },
+        {
+          name:"mark-blog",
+          tags:"mark's first blog",
+          language:'HTML',
+          collect:3,
+          fork:0,
+          url:"https://github.com/Markydh/mark-blog",
+        },
+        {
+          name:"081_mall2Public",
+          tags:"Forked from zhengjianzhong0107",
+          language:'Java',
+          collect: 4,
+          fork:0,
+          url:"https://github.com/Markydh/081_mall2Public"
+        },
+        {
+          name:"Markydh",
+          tags:"My personal repository",
+          language:'Markdown',
+          collect: 2,
+          fork:0,
+          url:"https://github.com/Markydh/Markydh"
+        }
+      ,]
     }
   },
   methods:{
@@ -91,6 +139,15 @@ export default {
           this.projectDetail = 'project-detail-nonActive'
         }
       }
+    },
+    // 鼠标悬浮在项目简介时动画效果
+    divHoverEvent(index) {
+      this.isActive = index;
+    },
+
+    handleClick(item){
+      const  hrefLink = item.url;
+      window.location.href = hrefLink;
     }
   }
 }
@@ -138,30 +195,35 @@ export default {
   background-color: white;
   border: 2px  solid rgba(103, 103, 103, 0.76);
   border-radius:4px;
+  transition: transform 0.3s ease;
 }
 
+.project-detail-Active:hover {
+  transform: scale(1.01); /* 鼠标悬停时放大1.05倍 */
+}
 
 .project-detail-Active{
   display: flex;
   justify-content: flex-start;
-  background-color: rgba(129, 129, 129, 0.32);
+  background-color: rgba(129, 129, 129, 0.17);
   flex-direction: column;
   border: 2px  solid rgba(103, 103, 103, 0.76);
   border-radius:4px;
+  transition: transform 0.3s ease;
 }
-
 
 .project-name{
-  padding-left: 20px;
   padding-top: 20px;
+  padding-left: 15px;
 }
 .project-itd{
-  padding-left: 20px;
-  padding-top: 20px;
+  padding-top: 5px;
+  padding-left: 15px;
 }
 .project-tags{
-  padding-left: 20px;
-  padding-top: 20px;
+  display: inline-flex;
+  justify-content: flex-start;
+  padding-left: 15px;
 }
 
 .p{
