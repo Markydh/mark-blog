@@ -28,12 +28,11 @@
     <div class="my-project">
       <h1>💻我的项目</h1>
       <div class="project-content">
-
-
-<!--        条件渲染子div
+<!--
+            条件渲染 && 列表渲染 子div
             通过isActive的值来决定渲染哪种样式
 -->
-        <div :class="{ 'project-detail-Active': isActive === index, 'project-detail-nonActive': isActive !== index }" v-for="(item, index) in items" @mouseenter="divHoverEvent(index)" @mouseleave="divHoverEvent(null)"  @click="handleClick(this.item)" >
+        <div :class="{ 'project-detail-Active': isActive === index, 'project-detail-nonActive': isActive !== index }" v-for="(item, index) in items" @mouseenter="divHoverEvent(index)" @mouseleave="divHoverEvent(null)"  @click="handleClick(item)" >
           <div class="project-name">
             <i class="iconfont" style="font-size: 27px;color: #3A8ABC">&#xe799;</i><span style="font-size: 18px;color:#3A8ABC;font-family: 'Hiragino Sans GB';padding-left: 5px">{{item.name}}</span>
           </div>
@@ -49,13 +48,20 @@
             <p style="margin-top: 0px;padding-right: 12px">6</p>
           </div>
         </div>
-
-
         </div>
+       <a  href="https://github.com/Markydh"  class="a-class"  @mouseenter="aHoverEvent(true)" @mouseleave="aHoverEvent(false)">
+         <span :style="{ color: linkColor }">查看更多</span>
+         <i class="iconfont" id="a-icon" :style="{ color: linkColor }">&#xe600;</i>
+       </a>
+      <hr style="border: 1px solid rgba(178,178,178,0.31); margin-top: 60px;width: 100%;">
       </div>
     </div>
   </div>
 </template>
+
+
+
+
 
 <script>
 export default {
@@ -67,6 +73,7 @@ export default {
       ins:'ins-nonActive',
       discord:'discord-nonActive',
       isActive: null,
+      linkColor:'black',
       items:[
         {
           name:"web-crawler",
@@ -145,9 +152,22 @@ export default {
       this.isActive = index;
     },
 
+    aHoverEvent(isHovered){
+        this.linkColor = isHovered ? '#3A8ABC':'black'
+    },
+
+
+    /***
+     * wind.open() 用法 window.open('url','target')
+     * 其中url:想要打开的网址地址，target有三种方法
+     * _blank 在新的窗口打开网址
+     * _self 在当前窗口下打开网址
+     * _top 框架网页中在上部窗口中显示目标网页(不常用)
+     * @param item
+     */
     handleClick(item){
       const  hrefLink = item.url;
-      window.location.href = hrefLink;
+      window.open(hrefLink,'_top');
     }
   }
 }
@@ -281,5 +301,16 @@ a{
   color: #1b75da;
   font-size: 35px;
   padding-left: 8px
+}
+.a-class{
+  position: relative;
+  left: 43%;
+  top:8%;
+  font-family: 'Hiragino Sans GB';
+  font-size: 17px;
+}
+#a-icon{
+  padding-left: 6px;
+  font-size: 20px;
 }
 </style>

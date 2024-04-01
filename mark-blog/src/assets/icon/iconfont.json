@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "10725873",
+      "name": "打勾",
+      "font_class": "dagou",
+      "unicode": "e682",
+      "unicode_decimal": 59010
+    },
+    {
+      "icon_id": "2815741",
+      "name": "右箭头",
+      "font_class": "youjiantou",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
       "icon_id": "7657720",
       "name": "fork",
       "font_class": "fork",
