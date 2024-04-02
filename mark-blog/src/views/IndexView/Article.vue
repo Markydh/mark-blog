@@ -57,19 +57,20 @@ export default {
 <style scoped>
 .container{
   width: 100%;
+  height: auto;
   display: flex;
   justify-content: flex-start;
 }
 
 .aside{
   width: 22%;
-  height: 800px;
+  height: auto;
   display: flex;
   flex-direction: column;
 }
 .content{
   width: 57%;
-  height: 800px;
+  height: auto;
 }
 /*订阅按钮样式*/
 .subscribe{
