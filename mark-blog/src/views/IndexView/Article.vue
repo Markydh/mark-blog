@@ -64,7 +64,7 @@ export default {
 
 .aside{
   width: 22%;
-  height: auto;
+  height: 800px;
   display: flex;
   flex-direction: column;
 }

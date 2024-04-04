@@ -76,14 +76,6 @@ export default {
       linkColor:'black',
       items:[
         {
-          name:"web-crawler",
-          tags:"First attempt at crawling",
-          language:'Python',
-          collect:2,
-          fork:3,
-          url:"https://github.com/Markydh/web-crawler"
-        },
-        {
           name:"mark-blog",
           tags:"mark's first blog",
           language:'HTML',
@@ -92,12 +84,29 @@ export default {
           url:"https://github.com/Markydh/mark-blog",
         },
         {
-          name:"081_mall2Public",
-          tags:"Forked from zhengjianzhong0107",
-          language:'Java',
+          name:"web-crawler",
+          tags:"First attempt at crawling",
+          language:'Python',
+          collect:2,
+          fork:3,
+          url:"https://github.com/Markydh/web-crawler"
+        },
+
+        {
+          name:"Learn_konwledge ",
+          tags:"My Learning Document",
+          language:'Markdown',
+          collect: 2,
+          fork:0,
+          url:"https://github.com/Markydh/Learn_konwledge"
+        },
+        {
+          name:"Leetcode",
+            tags:"冲击算法大佬，从现在开始",
+          language:'C++/C',
           collect: 4,
           fork:0,
-          url:"https://github.com/Markydh/081_mall2Public"
+          url:"https://github.com/Markydh/Leetcode"
         },
         {
           name:"Markydh",
@@ -106,6 +115,14 @@ export default {
           collect: 2,
           fork:0,
           url:"https://github.com/Markydh/Markydh"
+        },
+        {
+          name:"MyPicture",
+              tags:"My personal PictureBed",
+            language:'Image',
+            collect: 4,
+            fork:0,
+            url:"https://github.com/Markydh/MyPicture"
         }
       ,]
     }
@@ -198,10 +215,9 @@ export default {
 
 .project-content{
   width: 100%;
-  height: 300px;
+  height: auto;
   display: grid;
   grid-template-columns: repeat(2,50%);
-  grid-template-rows: repeat(3,50%);
   column-gap: 20px;
   row-gap: 20px;
 }
@@ -233,17 +249,23 @@ export default {
 }
 
 .project-name{
+  font-family: "Hiragino Sans GB";
   padding-top: 20px;
   padding-left: 15px;
 }
 .project-itd{
+  font-family: "Hiragino Sans GB";
+  font-size: 14px;
+  color: #3a3a3a;
   padding-top: 5px;
   padding-left: 15px;
 }
 .project-tags{
+  font-family: "Hiragino Sans GB";
+  font-size: 14px;
   display: inline-flex;
   justify-content: flex-start;
-  padding-left: 15px;
+  padding-left: 9px;
 }
 
 .p{

@@ -52,6 +52,12 @@ const router = createRouter({
               name:'LifeArticle',
               component: () => import('../views/ArticleViews/LifeArticle.vue')
             },
+              //文章详情页
+            {
+              path:'/articleDetail',
+              name:'ArticleDetail',
+              component:() => import('../views/ArticleViews/ArticleDetail.vue')
+            }
 
           ]
         },

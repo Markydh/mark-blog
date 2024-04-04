@@ -9,7 +9,7 @@
         <p style="font-size: 35px;margin-bottom: 5px;">月刊</p>
         <p style="font-size: 20px;color: #818181;margin-top: 10px;">个人月刊，分享近期的所见所思所感，每月更新一期。若喜欢可以点击左侧 Subscribe 输入您的邮箱地址订阅（移动端点击上方「Subscribe」按钮订阅）</p>
       </div>
-     <div v-for="(item , index) in articles" :key="index" class="article">
+     <div v-for="(item , index) in articles" :key="index" class="article" @click="handleClick(item)">
        <hr style="border: 1px solid rgba(204,204,204,0.31); width: 100%">
 <!--       如果此文章有展示图片-->
           <div v-if="item.url !== ''" class="article-with-image" :style="{backgroundImage: 'url('+ item.url +')' }">
@@ -32,12 +32,21 @@
 </template>
 
 <script>
+import router from "@/router/index.js";
 export default {
+  components:{
+    router
+  },
   name: "MonthArticle",
   data(){
     return{
       imageUrl:'/images/LoveMan.jpg',
       articles:[
+        {
+          date:'April 03, 2024',
+          title:'月刊（第7期）：十分钟学会Markdown语法',
+          url:''
+        },
         {
           date:'April 02, 2024',
           title:'月刊（第6期）：月色血风暴',
@@ -69,6 +78,11 @@ export default {
           url:''
         }
       ]
+    }
+  },
+  methods:{
+    handleClick(item){
+      router.push('articleDetail')
     }
   }
 }
