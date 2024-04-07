@@ -14,6 +14,13 @@ import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
 
 import Prism from 'prismjs';
 
+//导入gsap
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+
 VueMarkdownEditor.use(vuepressTheme, {
     Prism,
 });
@@ -23,5 +30,6 @@ const app = createApp(App)
 app.use(router)
 app.use(ElementPlus)
 app.use(VueMarkdownEditor);
+app.use(gsap);
 
 app.mount('#app')
