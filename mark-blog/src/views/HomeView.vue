@@ -19,11 +19,9 @@
       <el-main>
         <RouterView />
       </el-main>
-      <el-footer>
-        <div>
-        <span class="copyright">&copy; 2024 <a href="http://www.nange.cn/" target="_blank">mark's blog</a><a
-            href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow"></a></span>
-        </div>
+      <el-footer style="display:flex;justify-content: space-between;width: 100%">
+          <div><span class="copyright"><a href="https://beian.miit.gov.cn/" target="_blank">赣ICP备2024029658号-1</a></span></div>
+          <div><span style="padding-right: 20px">Copyright©markydh 2024-2025</span></div>
       </el-footer>
     </el-container>
   </div>

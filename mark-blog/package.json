@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@element-plus/icons": "^0.0.11",
     "@kangc/v-md-editor": "^2.3.18",
     "element-plus": "^2.6.2",
     "gsap": "^3.12.5",

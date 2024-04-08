@@ -79,7 +79,12 @@ const router = createRouter({
           name:'PhotoWall',
           component: () => import('../views/IndexView/PhotoWall.vue')
         },
-
+        //照片墙内容
+        {
+          path:'/photoWallDetails',
+          name:'PhotoWallDetails',
+          component:()=>import('../views/PhotoWallViews/PhotoWallDetails.vue')
+        },
           //主页搜索
         {
           path:'search',
