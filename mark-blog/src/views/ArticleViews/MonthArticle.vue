@@ -60,7 +60,7 @@ export default {
         {
           date:'March 28 , 2024',
           title:'月刊（第4期）：爱具体的人',
-          url:'/images/LoveMan.jpg',
+          url:''
         },
         {
           date:'March 14, 2024',

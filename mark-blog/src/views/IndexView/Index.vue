@@ -18,7 +18,7 @@
       <p>lombok</p>
       <div style="display: inline-flex;justify-content: flex-start">
         <a href="https://github.com/Markydh" class="iconfont" :id="github" @mouseover="hoverEvent('github')" @mouseleave="hoverEvent('github')">&#xe709;</a>
-        <a href="https://mail.google.com" class="iconfont" :id="gmail" @mouseover="hoverEvent('gmail')" @mouseleave="hoverEvent('gmail')">&#xe67c;</a>
+        <a href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&source=mailto&to=dianhong.yang.one@gmail.com" class="iconfont" :id="gmail" @mouseover="hoverEvent('gmail')" @mouseleave="hoverEvent('gmail')">&#xe67c;</a>
         <a href="https://www.instagram.com/" class="iconfont" :id="ins" @mouseover="hoverEvent('ins')" @mouseleave="hoverEvent('ins')">&#xe736;</a>
         <a href="https://discord.com/channels/@me" class="iconfont" :id="discord" @mouseover="hoverEvent('discord')" @mouseleave="hoverEvent('discord')">&#xe618;</a>
       </div>

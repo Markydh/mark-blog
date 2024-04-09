@@ -44,11 +44,11 @@ export default {
         },
         {
           picUrl:"https://cdn.jsdelivr.net/gh/Markydh/MyPicture@img/img/IMG_5448.jpg",
-          title:"最喜欢的男演员 - 方大同",
+          title:"最喜欢的男歌手 - 方大同",
         },
         {
           picUrl:"https://cdn.jsdelivr.net/gh/Markydh/MyPicture@img/img/IMG_6725.jpg",
-          title:"最喜欢的女演员 - 邓紫棋",
+          title:"最喜欢的女歌手 - 邓紫棋",
         },
         {
           picUrl:"https://cdn.jsdelivr.net/gh/Markydh/MyPicture@img/img/IMG_5907.jpg",

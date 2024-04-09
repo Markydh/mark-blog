@@ -24,12 +24,11 @@ const items = reactive([
 const pictureRefs = ref([]);
 
 onMounted(() => {
-  // 使用 $nextTick 确保所有图片元素都被挂载
   pictureRefs.value.forEach((picture, index) => {
     if (index % 2 === 0) {
-      gsap.from(picture, { x: -1000, duration: 2 });
+      gsap.from(picture, { x: -1000, duration: 2,scale:0 });
     } else {
-      gsap.from(picture, { x: 2680, duration: 2 });
+      gsap.from(picture, { x: 2680, duration: 2,scale:0.3});
     }
     if(index >= 2){
       gsap.from(picture, { y: 2000, duration: 2 });
