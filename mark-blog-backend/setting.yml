@@ -1,0 +1,28 @@
+//配置文件
+
+//数据库配置文件
+mysql:
+  host: localhost
+  port: 3306
+  db: markBlog
+  user: root
+  password: root
+  log_level: dev
+
+
+
+//日志配置文件
+logger:
+  level: info 
+  prefix: '[mark]'
+  director: log
+  show_line: true
+  log_in_console: true
+
+
+
+//系统配置文件
+system:
+  host: "0.0.0.0"
+  prot: 9090
+  env: dev
