@@ -13,5 +13,6 @@ func SetUpRouter() *gin.Engine {
 	router := gin.Default()
 	gin.SetMode(global.Config.System.Env)
 	UserAccount(router)
+	ArticleManagement(router)
 	return router
 }
