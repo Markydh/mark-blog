@@ -8,8 +8,8 @@ import (
 )
 
 // 全局变量，存储所有的重要元素，方便调用
-var(
+var (
 	Config *config.Config
-	DB *gorm.DB
-	Log *logrus.Logger
+	DB     *gorm.DB
+	Log    *logrus.Logger
 )

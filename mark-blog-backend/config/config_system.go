@@ -1,7 +1,15 @@
 package config
 
-type System struct{
-	Host		string 			`yaml:"host"`
-	Port 		uint			`yaml:"port"`
-	Env		string			`yaml:"env"`
-  }
+import (
+	"fmt"
+)
+
+type System struct {
+	Host string `yaml:"host"`
+	Port uint   `yaml:"port"`
+	Env  string `yaml:"env"`
+}
+
+func (s System) Addr() string {
+	return fmt.Sprintf("%s:%d", s.Host, s.Port)
+}

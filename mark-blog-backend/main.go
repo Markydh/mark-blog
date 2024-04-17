@@ -3,7 +3,7 @@ package main
 import (
 	"mark-blog-backend/core"
 	"mark-blog-backend/global"
-	"mark-blog-backend/router"
+	router "mark-blog-backend/routers"
 )
 
 func main() {
@@ -11,10 +11,10 @@ func main() {
 	core.InitConfig()
 	//初始化日志
 	global.Log = core.InitLogger()
-	global.Log.Warning("warning")
-	global.Log.Info("info")
 	//连接数据局
 	global.DB = core.InitGorm()
-	r := router.Router()
-	r.Run(":9999")
+	r := router.SetUpRouter()
+	addr := global.Config.System.Addr()
+	global.Log.Infof("mark-blog-backend运行在:%s", addr)
+	r.Run(addr)
 }
