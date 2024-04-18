@@ -4,7 +4,7 @@ mysql:
   db: markBlog
   user: root
   password: root
-  config: '?charset=utf8'
+  config: '?charset=utf8&parseTime=true&loc=Local'
   log_level: dev
 
 logger:
