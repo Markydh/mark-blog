@@ -19,3 +19,11 @@ system:
   host: "localhost"
   port: 9999
   env: release
+
+
+email:
+  account: "2247654142@qq.com"
+  password: "dzysmsmuyoptebfe"
+  port: 587
+  host: "smtp.qq.com"
+

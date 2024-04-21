@@ -92,7 +92,13 @@ const router = createRouter({
           component: () => import('../views/IndexView/Search.vue')
         }
       ]
-    }
+    },
+    //社区
+    {
+      path:'/community',
+      name:'Community',
+      component: () => import('../views/CommunityView/Community.vue')
+    },
   ]
 })
 

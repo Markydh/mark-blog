@@ -8,6 +8,7 @@
           </div>
           <div class="tags">
             <p><router-link to="/article">文章</router-link></p>
+            <p><router-link to="/community">社区</router-link></p>
             <p><router-link to="/tags">标签</router-link></p>
             <p><router-link to="/timeLine">时间轴</router-link></p>
             <p><router-link to="/photoWall">照片墙</router-link></p>

@@ -3,6 +3,7 @@ package global
 import (
 	"mark-blog-backend/config"
 
+	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -12,4 +13,5 @@ var (
 	Config *config.Config
 	DB     *gorm.DB
 	Log    *logrus.Logger
+	Redis  *redis.Client
 )

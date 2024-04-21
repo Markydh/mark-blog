@@ -1,8 +1,11 @@
 package services
 
 import (
+	"context"
+	"fmt"
 	"mark-blog-backend/global"
 	"mark-blog-backend/models"
+	"mark-blog-backend/utils"
 	"net/http"
 	"time"
 
@@ -29,20 +32,79 @@ func (UserService) GetUserInfo(c *gin.Context) models.User {
 	}
 }
 
-// 用户注册
-func (UserService) UserRegister(c *gin.Context) {
+// GetValidateCode
+// @Title GetValidateCode
+// @Description  发送邮箱验证码 并存入redis（5分钟有效时间）
+// @Author hyy 2024-04-021 20:14:20
+// @Param c type description
+func (UserService) SendCodeToUser(c *gin.Context) {
 	var user = models.User{}
 	if err := c.Bind(&user); err != nil {
 		models.ReturnError(c, 400, "获取json失败", nil)
 		return
 	}
+
+	//将验证码发到用户指定邮箱 并返回验证码
+	vCode, err := utils.SendCodeValidate(user)
+	if err != nil {
+		global.Log.Warning(err)
+		models.ReturnError(c, 400, "验证码发送失败", nil)
+		return
+	}
+
+	// 验证码存入redis 并设置过期时间5分钟
+	ctx := context.Background()
+	err1 := global.Redis.HSet(ctx, "username:checkCode", user.Username, vCode).Err()
+	global.Redis.Expire(ctx, "username:checkCode", 300)
+	if err1 != nil {
+		global.Log.Warning("无法将信息存入redis")
+		models.ReturnError(c, 400, "验证码存储失败", nil)
+		return
+	}
+
+	value := global.Redis.HGet(c, "username:checkCode", user.Username)
+	fmt.Println(value)
+	models.ReturnSuccess(c, 200, "验证码发送成功", nil)
+}
+
+func (UserService) UserRegister(c *gin.Context) {
+	var userEmail = models.UserEmail{}
+	var user = models.User{}
+	if err := c.Bind(&userEmail); err != nil {
+		models.ReturnError(c, 400, "获取json失败", nil)
+		return
+	}
+
+	// 从redis中提取验证码，判断用户提交的验证码对不对
+	fmt.Println(userEmail)
+
+	vCode := global.Redis.HGet(c, "username:checkCode", userEmail.Username)
+	fmt.Println(vCode)
+
+	if vCode.String() == " " {
+		models.ReturnError(c, 400, "未收到验证码", nil)
+		return
+	}
+
+	if vCode.String() != userEmail.CheckCode {
+		models.ReturnError(c, 400, "密码不匹配", nil)
+		return
+	}
+	//hash加密
+	hashPwd, err := utils.HashPassword(userEmail.Password)
+	if err != nil {
+		global.Log.Warning("加密失败")
+	}
+	user.Username = userEmail.Username
+	user.Email = userEmail.Email
+	user.Password = hashPwd
 	var nowTime = time.Now()
 	user.CreatedTime = &nowTime
 	user.Level = 1
 	user.Avatar = "default_avatar.jpg"
+
 	// 将用户对象保存到数据库
-	err := global.DB.Create(&user).Error
-	if err != nil {
+	if err := global.DB.Create(&user).Error; err != nil {
 		// 处理错误
 		global.Log.Error("Error creating user:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
@@ -59,10 +121,15 @@ func (UserService) UserLogin(c *gin.Context) {
 	password := c.Query("password")
 	// 查询数据库，检查用户名和密码是否匹配
 	var user models.User
-	if err := global.DB.Where("username = ? AND password = ?", username, password).First(&user).Error; err != nil {
+	if err := global.DB.Where("username = ?", username).First(&user).Error; err != nil {
 		global.Log.Error("Error finding user:", err)
-		models.ReturnError(c, 400, "登陆失败", nil)
+		models.ReturnError(c, 400, "登陆失败，用户名不存在", nil)
 	} else {
-		models.ReturnSuccess(c, 200, "登陆成功", nil)
+		fmt.Println(user.Password, password)
+		if utils.ComparePasswords(user.Password, password) {
+			models.ReturnSuccess(c, 200, "登陆成功", nil)
+		} else {
+			models.ReturnSuccess(c, 400, "登陆失败，密码不匹配", nil)
+		}
 	}
 }
