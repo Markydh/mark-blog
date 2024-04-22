@@ -1,7 +1,6 @@
 package services
 
 import (
-	"context"
 	"fmt"
 	"mark-blog-backend/global"
 	"mark-blog-backend/models"
@@ -9,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,15 +32,23 @@ func (UserService) GetUserInfo(c *gin.Context) models.User {
 	}
 }
 
-// GetValidateCode
 // @Title GetValidateCode
 // @Description  发送邮箱验证码 并存入redis（5分钟有效时间）
-// @Author hyy 2024-04-021 20:14:20
+// @Author Markydh 2024-04-21 20:14:20
 // @Param c type description
 func (UserService) SendCodeToUser(c *gin.Context) {
-	var user = models.User{}
+
+	var user models.User
 	if err := c.Bind(&user); err != nil {
 		models.ReturnError(c, 400, "获取json失败", nil)
+		return
+	}
+
+	// 检查邮箱是否已经存在于数据库
+	var existingUser models.User
+	if err := global.DB.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
+		// 找到了匹配的记录，邮箱已经存在，返回错误
+		models.ReturnError(c, 400, "邮箱已经被注册", nil)
 		return
 	}
 
@@ -53,20 +61,24 @@ func (UserService) SendCodeToUser(c *gin.Context) {
 	}
 
 	// 验证码存入redis 并设置过期时间5分钟
-	ctx := context.Background()
-	err1 := global.Redis.HSet(ctx, "username:checkCode", user.Username, vCode).Err()
-	global.Redis.Expire(ctx, "username:checkCode", 300)
-	if err1 != nil {
-		global.Log.Warning("无法将信息存入redis")
-		models.ReturnError(c, 400, "验证码存储失败", nil)
-		return
+	// 从连接池获取连接
+	conn := global.RedisPool.Get()
+	//关闭连接
+	defer conn.Close()
+	replySet, err := conn.Do("hset", "user:code", user.Username, vCode)
+	if err != nil {
+		panic(err)
 	}
+	conn.Do("expire", "user:code", 300)
 
-	value := global.Redis.HGet(c, "username:checkCode", user.Username)
-	fmt.Println(value)
-	models.ReturnSuccess(c, 200, "验证码发送成功", nil)
+	global.Log.Info(replySet)
+	models.ReturnSuccess(c, 200, "验证码已发送到目标邮箱", nil)
 }
 
+// @Title GetValidateCode
+// @Description  读取用户注册信息，判断验证码是否正确，正确则创建用户账号
+// @Author Markydh 2024-04-22 16:40:32
+// @Param c type description
 func (UserService) UserRegister(c *gin.Context) {
 	var userEmail = models.UserEmail{}
 	var user = models.User{}
@@ -75,21 +87,25 @@ func (UserService) UserRegister(c *gin.Context) {
 		return
 	}
 
-	// 从redis中提取验证码，判断用户提交的验证码对不对
+	// 从redis中提取验证码，判断用户提交的验证码是否正确
 	fmt.Println(userEmail)
 
-	vCode := global.Redis.HGet(c, "username:checkCode", userEmail.Username)
-	fmt.Println(vCode)
-
-	if vCode.String() == " " {
+	conn := global.RedisPool.Get()
+	defer conn.Close()
+	vCode, err := redis.String(conn.Do("hget", "user:code", userEmail.Username))
+	if err != nil {
+		panic(err)
+	}
+	if vCode == "" {
 		models.ReturnError(c, 400, "未收到验证码", nil)
 		return
 	}
-
-	if vCode.String() != userEmail.CheckCode {
-		models.ReturnError(c, 400, "密码不匹配", nil)
+	if vCode != userEmail.CheckCode {
+		models.ReturnError(c, 400, "验证码错误", nil)
 		return
 	}
+	//如果验证码正确，则注册用户账号
+
 	//hash加密
 	hashPwd, err := utils.HashPassword(userEmail.Password)
 	if err != nil {

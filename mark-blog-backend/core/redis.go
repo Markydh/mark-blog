@@ -1,14 +1,22 @@
 package core
 
 import (
-	"github.com/redis/go-redis/v9"
+	"time"
+
+	"github.com/garyburd/redigo/redis"
 )
 
-func InitRedis() *redis.Client {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:	  "localhost:6379",
-		Password: "", // 没有密码，默认值
-		DB:		  0,  // 默认DB 0
-	})
-	return rdb
+var pool *redis.Pool
+
+func InitRedis()(*redis.Pool){
+    pool = &redis.Pool{
+        Dial: func() (redis.Conn, error) {
+            return redis.Dial("tcp", "localhost:6379")
+        },
+        TestOnBorrow: func(c redis.Conn, t time.Time) error {
+            _, err := c.Do("PING")
+            return err
+        },
+    }
+	return pool
 }
