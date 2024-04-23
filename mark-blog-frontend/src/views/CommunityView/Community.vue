@@ -39,7 +39,7 @@
                   <h3 style="font-size: 25px;font-weight: normal;color: #595353">注册</h3>
                   <span style="color: #a8a8ab;font-size: small">用户名</span>
                   <div>
-                    <input v-model="userInfo.username" type="text" @input="checkUsername" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" />
+                    <input v-model="userInfo.username" type="text" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" />
                     <p v-if="usernameExist" style="color: red; font-size: small;">用户名已存在</p>
                   </div>
                   <span style="color: #a8a8ab;font-size: small">密码</span>
@@ -117,24 +117,6 @@ export default {
     }
   },
   methods:{
-    //判断用户名是否存在
-    checkUsername() {
-      this.request.get("/user/getUserInfo", {
-        params: {
-          username: this.userInfo.username
-        }
-      }).then(res => {
-        if (res.data.code === 400) {
-          this.usernameExist = true;
-        } else {
-          this.usernameExist = false;
-        }
-      }).catch(error => {
-        console.error("Error occurred while checking username:", error);
-        // 处理错误情况，例如显示错误提示或者其他逻辑
-      });
-    },
-
     //检查密码格式是否正确
     checkPassword() {
       // 密码格式要求：至少包含一个大写字母、一个小写字母、一个数字，且长度为8到20位
@@ -178,26 +160,59 @@ export default {
       gsap.to(".signMsg",{x:-400})
       this.func='login'
     },
+
+
     async SendMsgToUser(){
-      console.log(this.userInfo)
      this.request.post("/user/sendCodeToUser",this.userInfo).then(res=>{
+           this.usernameExist = false
            if(!res){
               this.$message.warning("验证码发送失败")
             }
             else{
               this.$message.info("验证码已发送")
             }
+        }).catch(error =>{
+          if(error.response.data.code === 400) {
+            this.usernameExist = false
+            this.$message.warning(error.response.data.msg)
+          }else if(error.response.data.code === 303){
+            this.usernameExist = true
+          }
+     })
+    },
+
+
+    async doLogin(){
+        this.request.get("/user/userLogin",{
+          params:{
+            username:this.userInfo.username,
+            password:this.userInfo.password
+          }
+        }).then(res =>{
+          if(!res){
+            this.$message.warning("登陆失败")
+          }else{
+            this.$message.warning("登陆成功")
+          }
+        }).catch(error=>{
+          if(error.response.data.code === 404){
+            this.$message.warning("注册未账号")
+          }else if(error.response.data.code === 400){
+            this.$message.warning("密码错误")
+          }
         })
     },
-    async doLogin(){
-      console.log(this.userInfo)
-    },
     async doRegister(){
-      this.request.post("/user/userRegister",this.userInfo).then(response=>{
-        if(!response){
+      this.request.post("/user/userRegister",this.userInfo).then(res=>{
+        if(!res){
           this.$message.warning("注册失败")
         }else{
           this.$message.success("注册成功")
+          this.signUp = false;
+        }
+      }).catch(err =>{
+        if (!err){
+          this.usernameExist = true;
         }
       })
     },

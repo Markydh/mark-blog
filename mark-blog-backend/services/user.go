@@ -17,6 +17,7 @@ import (
 type UserService struct {
 }
 
+
 // 获取用户信息
 func (UserService) GetUserInfo(c *gin.Context) {
 	var user models.User
@@ -36,6 +37,8 @@ func (UserService) GetUserInfo(c *gin.Context) {
 	models.ReturnSuccess(c, 200, "查询成功", userInfo)
 }
 
+
+
 // @Title GetValidateCode
 // @Description  发送邮箱验证码 并存入redis（5分钟有效时间）
 // @Author Markydh 2024-04-21 20:14:20
@@ -48,8 +51,19 @@ func (UserService) SendCodeToUser(c *gin.Context) {
 		return
 	}
 
-	// 检查邮箱是否已经存在于数据库
 	var existingUser models.User
+	//检查用户名是否存在
+	if err := global.DB.First(&existingUser,"username = ?",user.Username).Error;err!=nil{
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			global.Log.Infof("用户名不存在")
+		}
+	}else {
+		models.ReturnError(c, 303, "用户名已存在", nil)
+		return
+	}
+
+	// 检查邮箱是否已经绑定
+
 	if err := global.DB.First(&existingUser, "email = ?", user.Email).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			global.Log.Infof("邮箱未注册")
@@ -82,6 +96,7 @@ func (UserService) SendCodeToUser(c *gin.Context) {
 	global.Log.Info(replySet)
 	models.ReturnSuccess(c, 200, "验证码已发送到目标邮箱", nil)
 }
+
 
 // @Title GetValidateCode
 // @Description  读取用户注册信息，判断验证码是否正确，正确则创建用户账号
@@ -137,6 +152,7 @@ func (UserService) UserRegister(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 }
 
+
 // /用户登陆
 func (UserService) UserLogin(c *gin.Context) {
 	// 从请求中获取用户名和密码
@@ -146,12 +162,12 @@ func (UserService) UserLogin(c *gin.Context) {
 	var user models.User
 	if err := global.DB.Where("username = ?", username).First(&user).Error; err != nil {
 		global.Log.Error("Error finding user:", err)
-		models.ReturnError(c, 400, "登陆失败，用户名不存在", nil)
+		models.ReturnError(c, 404, "登陆失败，用户名不存在", nil)
 	} else {
 		if utils.ComparePasswords(user.Password, password) {
 			models.ReturnSuccess(c, 200, "登陆成功", nil)
 		} else {
-			models.ReturnSuccess(c, 400, "登陆失败，密码不匹配", nil)
+			models.ReturnError(c, 400, "登陆失败，密码不匹配", nil)
 		}
 	}
 }
