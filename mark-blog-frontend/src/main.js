@@ -6,6 +6,10 @@ import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import '../src/assets/icon/iconfont.css'
 
+//封装axios
+import request from "@/utils/request"
+
+
 //引入v-md-editor
 import VueMarkdownEditor from '@kangc/v-md-editor';
 import '@kangc/v-md-editor/lib/style/base-editor.css';
@@ -37,5 +41,6 @@ app.use(router)
 app.use(ElementPlus)
 app.use(VueMarkdownEditor);
 app.use(gsap);
+app.config.globalProperties.request = request;
 
 app.mount('#app')
