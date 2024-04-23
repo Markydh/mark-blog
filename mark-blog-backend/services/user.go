@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"mark-blog-backend/global"
 	"mark-blog-backend/models"
@@ -10,26 +11,29 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type UserService struct {
 }
 
 // 获取用户信息
-func (UserService) GetUserInfo(c *gin.Context) models.User {
+func (UserService) GetUserInfo(c *gin.Context) {
 	var user models.User
 	err := global.DB.Where("username = ?", c.Query("username")).First(&user).Error
 	if err != nil {
+		models.ReturnError(c, 400, "未查询到用户信息", nil)
 		global.Log.Warning("未查询到用户信息")
-		return models.User{}
+		return
 	}
-	return models.User{
+	var userInfo models.User = models.User{
 		Id:       user.Id,
 		Username: user.Username,
 		Email:    user.Email,
 		Avatar:   user.Avatar,
 		Level:    user.Level,
 	}
+	models.ReturnSuccess(c, 200, "查询成功", userInfo)
 }
 
 // @Title GetValidateCode
@@ -46,9 +50,13 @@ func (UserService) SendCodeToUser(c *gin.Context) {
 
 	// 检查邮箱是否已经存在于数据库
 	var existingUser models.User
-	if err := global.DB.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
-		// 找到了匹配的记录，邮箱已经存在，返回错误
-		models.ReturnError(c, 400, "邮箱已经被注册", nil)
+	if err := global.DB.First(&existingUser, "email = ?", user.Email).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			global.Log.Infof("邮箱未注册")
+		}
+	} else {
+		models.ReturnError(c, 400, "邮箱已注册", nil)
+		fmt.Println("邮箱已注册")
 		return
 	}
 
@@ -88,7 +96,6 @@ func (UserService) UserRegister(c *gin.Context) {
 	}
 
 	// 从redis中提取验证码，判断用户提交的验证码是否正确
-	fmt.Println(userEmail)
 
 	conn := global.RedisPool.Get()
 	defer conn.Close()
@@ -141,7 +148,6 @@ func (UserService) UserLogin(c *gin.Context) {
 		global.Log.Error("Error finding user:", err)
 		models.ReturnError(c, 400, "登陆失败，用户名不存在", nil)
 	} else {
-		fmt.Println(user.Password, password)
 		if utils.ComparePasswords(user.Password, password) {
 			models.ReturnSuccess(c, 200, "登陆成功", nil)
 		} else {

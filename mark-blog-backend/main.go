@@ -16,6 +16,7 @@ func main() {
 	//连接redis
 	// global.Redis=core.InitRedis()
 	global.RedisPool = core.InitRedis()
+	//配置路由
 	r := router.SetUpRouter()
 	addr := global.Config.System.Addr()
 	// global.Log.Infof("mark-blog-backend运行在:%s", addr)
