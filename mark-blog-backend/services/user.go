@@ -152,7 +152,6 @@ func (UserService) UserRegister(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 }
 
-
 // /用户登陆
 func (UserService) UserLogin(c *gin.Context) {
 	// 从请求中获取用户名和密码

@@ -206,6 +206,7 @@ export default {
       this.request.post("/user/userRegister",this.userInfo).then(res=>{
         if(!res){
           this.$message.warning("注册失败")
+          this.userInfo = ""
         }else{
           this.$message.success("注册成功")
           this.signUp = false;
