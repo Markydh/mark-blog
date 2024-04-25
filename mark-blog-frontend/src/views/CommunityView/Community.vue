@@ -242,10 +242,10 @@ export default {
 }
 .aside{
   width: 25%;
-  background-color: #DD4A68;
+
 }
 .context{
-  background-color: #63a35c;
+
   width: 100%;
   height: 100vh;
 }
