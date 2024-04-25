@@ -67,7 +67,7 @@ export default {
           title:"武功山一游",
         },
         {
-          picUrl:"https://cdn.jsdelivr.net/gh/Markydh/MyPicture@img/img/IMG_1000.JPG",
+          picUrl:"https://cdn.jsdelivr.net/gh/Markydh/MyPicture@img/img/IMG_6580-20240404134745024.jpg",
           title:"未完待续",
         }
       ]

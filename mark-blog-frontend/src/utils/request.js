@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const request = axios.create({
-    // baseURL: 'https://markydh.cn/api',
-    baseURL: 'http://localhost:9999/api',
+    baseURL: 'https://markydh.cn/api',
+    // baseURL: 'http://localhost:9999/api',
     timeout: 5000
 })
 

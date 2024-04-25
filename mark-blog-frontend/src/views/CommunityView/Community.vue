@@ -35,31 +35,31 @@
             <div class="signMsg">
 <!--              如果是注册-->
               <div v-if="func === 'sign'">
-                <form  ref="loginForm" :model="userInfo" class="registerForm" >
+                <form  ref="loginForm" :model="userRegisterInfo" class="registerForm" >
                   <h3 style="font-size: 25px;font-weight: normal;color: #595353">注册</h3>
                   <span style="color: #a8a8ab;font-size: small">用户名</span>
                   <div>
-                    <input v-model="userInfo.username" type="text" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" />
+                    <input v-model="userRegisterInfo.username" type="text" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" />
                     <p v-if="usernameExist" style="color: red; font-size: small;">用户名已存在</p>
                   </div>
                   <span style="color: #a8a8ab;font-size: small">密码</span>
                   <div>
-                    <input v-model="userInfo.password"  type="password" @input="checkPassword" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'"/>
+                    <input v-model="userRegisterInfo.password"  type="password" @input="checkPassword" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'"/>
                     <p v-if="passwordError" style="color: red; font-size: small;">至少包含一个大写字母、一个数字，且长度为8到20位</p>
                   </div>
                   <span style="color: #a8a8ab;font-size: small">确认密码</span>
                   <div>
-                    <input v-model="userInfo.confirmPwd"  type="password" @input="checkConfirmPassword" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'"/>
+                    <input v-model="userRegisterInfo.confirmPwd"  type="password" @input="checkConfirmPassword" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'"/>
                     <p v-if="confirmPasswordError" style="color: red; font-size: small;">密码不一致</p>
                   </div>
                   <span style="color: #a8a8ab;font-size: small">邮箱</span>
                   <div>
-                    <input v-model="userInfo.email" type="text"  @input="checkEmail" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" />
+                    <input v-model="userRegisterInfo.email" type="text"  @input="checkEmail" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" />
                     <p v-if="emailError" style="color: red; font-size: small;">邮箱格式错误</p>
                   </div>
                   <div style="display: flex;flex-direction: row;padding-top: 2px">
-                    <input v-model="userInfo.checkCode" type="text" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" style="  border:0;border-bottom: 1px solid #999999;width: 50%;margin-right: 5px" />
-                    <a href="javascript: void(0)" class="btn" @click="SendMsgToUser()">
+                    <input v-model="userRegisterInfo.checkCode" type="text" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" style="  border:0;border-bottom: 1px solid #999999;width: 50%;margin-right: 5px" />
+                    <a class="btn" @click="SendMsgToUser()">
                       验证码
                     </a>
                   </div>
@@ -71,15 +71,15 @@
               </div>
 <!--              如果是登陆-->
               <div v-if="func === 'login'">
-                <form  ref="loginForm" :model="userInfo" class="loginForm">
+                <form  ref="loginForm" :model="userLoginInfo" class="loginForm">
                   <h3 style="font-size: 25px;padding-bottom: 30px;font-weight: normal;color: #595353">登陆</h3>
                   <span style="color: #a8a8ab;font-size: small">用户名</span>
                     <div>
-                    <input v-model="userInfo.username" type="text" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" />
+                    <input v-model="userLoginInfo.username" type="text" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'" />
                     </div>
                     <span style="color: #a8a8ab;font-size: small">密码</span>
                     <div>
-                    <input v-model="userInfo.password"  type="password" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'"/>
+                    <input v-model="userLoginInfo.password"  type="password" onMouseOver="style.background='#eee'" onMouseOut="style.background='#fff'"/>
                     </div>
                   <h3 style="font-size: 13px">Now User </h3>
                   <router-link to="" style="color:rgb(0,0,0);text-decoration: none;font-size: small;margin-right: 120px;">Sign Up</router-link>
@@ -102,8 +102,15 @@ export default {
   data(){
     return{
       signUp:false,
-      func:'sign',
-      userInfo:{
+      func:'login',
+      userRegisterInfo:{
+        username:'',
+        email:'',
+        confirmPwd:'',
+        password:'',
+        checkCode:'',
+      },
+      userLoginInfo:{
         username:'',
         email:'',
         confirmPwd:'',
@@ -117,60 +124,66 @@ export default {
     }
   },
   methods:{
+
     //检查密码格式是否正确
     checkPassword() {
       // 密码格式要求：至少包含一个大写字母、一个小写字母、一个数字，且长度为8到20位
       const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/;
-      if (!passwordRegex.test(this.userInfo.password)) {
+      if (!passwordRegex.test(this.userRegisterInfo.password)) {
        this.passwordError=true
       }else{
         this.passwordError=false
       }
     },
+
     //两次密码是否一致
     checkConfirmPassword() {
-      if (this.userInfo.password !== this.userInfo.confirmPwd) {
+      if (this.userRegisterInfo.password !== this.userRegisterInfo.confirmPwd) {
       this.confirmPasswordError=true
       }else{
         this.confirmPasswordError=false
       }
     },
+
     //邮件格式是否正确
     checkEmail() {
       // 邮箱格式要求：符合常见的邮箱格式要求
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(this.userInfo.email)) {
+      if (!emailRegex.test(this.userRegisterInfo.email)) {
         this.emailError=true
       }else{
         this.emailError=false
       }
     },
 
+
     async signLogin(){
-      console.log("点击登陆注册")
       this.signUp = true
     },
+
     changeToLogin(){
-        gsap.to(".buttonChange",{x:0})
-        gsap.to(".signMsg",{x:0})
+        gsap.to(".buttonChange",{x:400})
+        gsap.to(".signMsg",{x:-400})
         this.func='sign'
     },
     changeToRegister(){
-      gsap.to(".buttonChange",{x:400})
-      gsap.to(".signMsg",{x:-400})
+      gsap.to(".buttonChange",{x:0})
+      gsap.to(".signMsg",{x:0})
       this.func='login'
     },
 
 
     async SendMsgToUser(){
-     this.request.post("/user/sendCodeToUser",this.userInfo).then(res=>{
-           this.usernameExist = false
-           if(!res){
-              this.$message.warning("验证码发送失败")
-            }
-            else{
-              this.$message.info("验证码已发送")
-            }
+      //如果符合条件，则注册
+      if (!this.passwordError && !this.confirmPasswordError && !this.emailError) {
+        this.request.post("/user/sendCodeToUser",this.userRegisterInfo).then(res=>{
+          this.usernameExist = false
+          if(!res){
+            this.$message.warning("验证码发送失败")
+          }
+          else{
+            this.$message.info("验证码已发送")
+          }
         }).catch(error =>{
           if(error.response.data.code === 400) {
             this.usernameExist = false
@@ -178,42 +191,48 @@ export default {
           }else if(error.response.data.code === 303){
             this.usernameExist = true
           }
-     })
-    },
-
-
-    async doLogin(){
-        this.request.get("/user/userLogin",{
-          params:{
-            username:this.userInfo.username,
-            password:this.userInfo.password
-          }
-        }).then(res =>{
-          if(!res){
-            this.$message.warning("登陆失败")
-          }else{
-            this.$message.warning("登陆成功")
-          }
-        }).catch(error=>{
-          if(error.response.data.code === 404){
-            this.$message.warning("注册未账号")
-          }else if(error.response.data.code === 400){
-            this.$message.warning("密码错误")
-          }
         })
+      }
     },
+
     async doRegister(){
-      this.request.post("/user/userRegister",this.userInfo).then(res=>{
+      this.request.post("/user/userRegister",this.userRegisterInfo).then(res=>{
         if(!res){
           this.$message.warning("注册失败")
-          this.userInfo = ""
+          this.userRegisterInfo = ""
         }else{
           this.$message.success("注册成功")
+          this.userRegisterInfo = ""
           this.signUp = false;
         }
       }).catch(err =>{
-        if (!err){
+        if(err.response.data.code === 400){
+          this.$message.warning(err.response.data.msg)
+        }else if(err.response.data.code===303){
           this.usernameExist = true;
+        }
+      })
+    },
+
+    async doLogin(){
+      this.request.get("/user/userLogin",{
+        params:{
+          username:this.userLoginInfo.username,
+          password:this.userLoginInfo.password
+        }
+      }).then(res =>{
+        if(!res){
+          this.$message.warning("登陆失败")
+        }else{
+          this.signUp=false
+          this.userLoginInfo=""
+          this.$message.warning("登陆成功")
+        }
+      }).catch(error=>{
+        if(error.response.data.code === 404){
+          this.$message.warning("注册未账号")
+        }else if(error.response.data.code === 400){
+          this.$message.warning("密码错误")
         }
       })
     },
